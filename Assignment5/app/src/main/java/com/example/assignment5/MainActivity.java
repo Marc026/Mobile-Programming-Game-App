@@ -6,12 +6,14 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.TextView;
 import android.util.Log;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -119,13 +121,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endGame(boolean playerWins) {
+        String message;
         if (playerWins) {
-            Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
+            message = "You win!";
         } else {
-            Toast.makeText(this, "You lose!", Toast.LENGTH_SHORT).show();
+            message = "You lose!";
         }
-        promptForPlayerName(playerWins);
+
+        // Display the message with an animation
+        TextView messageTextView = findViewById(R.id.messageTextView);
+        messageTextView.setText(message);
+        messageTextView.setVisibility(View.VISIBLE); // Make the text view visible
+
+        // Apply animation to the text view
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.text_scale_animation);
+        messageTextView.startAnimation(animation);
+
+        // Delay showing the prompt for player name
+        new Handler().postDelayed(() -> promptForPlayerName(playerWins), 2000); // Delay for 2 seconds (adjust as needed)
     }
+
+
 
     private void promptForPlayerName(boolean playerWins) {
         // Prompt for player name
@@ -214,6 +230,10 @@ public class MainActivity extends AppCompatActivity {
                 cardViews[index].setImageResource(images[cardValues[index]]);
                 checkMatch();
             }
+
+            // Apply animation to the clicked card view
+            Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.button_scale_animation);
+            v.startAnimation(animation);
         }
     }
 }
